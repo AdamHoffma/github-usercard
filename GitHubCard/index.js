@@ -37,7 +37,24 @@ axios.get('https://api.github.com/users/AdamHoffma')
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = [
+  'tetondan',
+  'dustinmyers',
+  'justsml',
+  'luishrd',
+  'bigknell'];
+
+  followersArray.forEach((people) => {
+    axios.get(`https://api.github.com/users/${people}`)
+    .then (res => {
+      const element = createCard(res.data);
+      cards.appendChild(element)
+    })
+    .catch(error => {
+      console.log("Not now Man!", error)
+    })
+
+  })
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -61,7 +78,7 @@ function createCard(data) {
   cardInfo.appendChild(userName)
   cardInfo.appendChild(location)
   cardInfo.appendChild(profile)
-  profile.appendChild(href)
+  
   cardInfo.appendChild(followers)
   cardInfo.appendChild(following)
   cardInfo.appendChild(bio)
@@ -71,14 +88,18 @@ function createCard(data) {
   name.classList.add("name")
   userName.classList.add("username")
 
-  img.src = `${data.avatar_url}`
-  name.textContent = `${data.name}`
-  userName.textContent = `${data.login}`
-  location.textContent = `${data.location}`
-  href.textContent = `${data.html_url}`
-  followers.textContent = `${data.followers}`
-  following.textContent = `${data.following}`
-  bio.textContent = `${data.bio}`
+  img.src = data.avatar_url
+  name.textContent = `${data.name || "Adam Hoffman"}`
+  userName.textContent = ` UserName: ${data.login}`
+  location.textContent = `Location: ${data.location || "Everywhere"}`
+  href.href = data.html_url
+  href.textContent = data.html_url
+  followers.textContent = `Folowers: ${data.followers}`
+  following.textContent = `Following: ${data.following}`
+  bio.textContent = `${data.bio || "Bio: Forever Learning"}`
+  profile.textContent = `Profile: `
+
+  profile.appendChild(href)
 
   return card
 
